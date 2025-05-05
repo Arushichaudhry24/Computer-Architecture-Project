@@ -34,6 +34,36 @@ Our motivation stems from the limitations of traditional policies like LRU and L
 * Prevents cache pollution by isolating one-time-use blocks
 * Lightweight and adaptable, offering improved performance in workloads with dynamic access patterns
 
+
+## Modified Files and Run Instructions
+
+### Files Modified for Cache Replacement Policies
+
+The following files in the ZSim repository were modified to implement and support the **DRRIPW8** and **SLRU** cache replacement policies:
+
+1. **`init.cpp`**
+
+   * Updated to register new cache replacement policies (`drripw8` and `slru`) so they can be selected via configuration files.
+
+2. **`rrip_repl.h`**
+
+   * Modified to include logic for **DRRIPW8**, including 8-bit saturating counters, set-dueling mechanism, and differentiated promotion for clean and dirty blocks.
+   * Also includes SLRU implementation: two-segment structure with promotion, demotion, and LRU management within each segment.
+
+3. **`hw4runscript`**
+
+   * Edited to automate the execution of all benchmarks with the newly implemented replacement policies using their respective configuration files.
+
+4. **Benchmark Configuration Files (in `/configs/`)**
+
+
+
+### Run Instructions
+
+Each benchmark can be run directly using its corresponding configuration file without requiring any further changes to the script or setup. The simulator reads the `"replPolicy"` field from the config file to initialize the appropriate cache replacement logic.
+
+
+
 ## Simulation & Metrics
 
 Each SPEC benchmark was run for **100 million instructions** using representative simpoints. For DRRIPW8 and SLRU, simulations were integrated into ZSim’s cache replacement module. Key performance metrics extracted include:
