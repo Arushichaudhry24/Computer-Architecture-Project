@@ -100,5 +100,6 @@ README.md    # This file
 
 * Arushi Chaudhry
 * Samarth Pahwa
-  Electrical & Computer Engineering
-  Texas A\&M University
+
+Electrical & Computer Engineering
+Texas A\&M University
