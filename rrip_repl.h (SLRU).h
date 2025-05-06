@@ -14,35 +14,35 @@ class SRRIPReplPolicy : public ReplPolicy {
     
     public:
         // add member methods here, refer to repl_policies.h
-        explicit SRRIPReplPolicy(uint32_t _numLines, uint32_t _rpvMax) : numLines(_numLines), rpvMax(_rpvMax) {
+        explicit SRRIPReplPolicy(uint32_t _numLines, uint32_t _rpvMax) : numLines(_numLines), rpvMax(_rpvMax) { //Initializing SRRIP policy with numLines, rpv max value
             array = gm_calloc<uint32_t>(numLines);
-            for (uint32_t i= 0; i <numLines; ++i){
-                array[i]= rpvMax;
+            for (uint32_t i= 0; i <numLines; ++i){ //initializing the array with rpvMax as it's the first one
+                array[i]= rpvMax;//looping througgh
             }
         }
         ~SRRIPReplPolicy() override { //Destructor
-            gm_free(array);
+            gm_free(array); //freeing memory space
         }
         
         void update(uint32_t id, const MemReq*) override{ //update
-            array[id] = 0;
+            array[id] = 0; //set rrpv to be equal to 0 as it was recently hit, low eviction
         }
         
         void replaced(uint32_t id) override{ //replace
-            array[id] = rpvMax -1;
+            array[id] = rpvMax -1; //let the new block's rrpv equal to rpvMax-1
         }
         
         template <typename C> inline uint32_t rank(const MemReq*, C cands) { //rank
             while(true){
-                for(auto ci= cands.begin(); ci != cands.end(); ci.inc() ){
-                    if(array[*ci] == rpvMax){
+                for(auto ci= cands.begin(); ci != cands.end(); ci.inc() ){ //loop through the cache
+                    if(array[*ci] == rpvMax){ //if we find an element with the maximum rrpv Value, evict
                         return *ci; //evict
                     }
                 }
                 
-                for(auto ci= cands.begin(); ci !=cands.end(); ci.inc()){
-                    if(array[*ci]< rpvMax){ //loop through
-                        array[*ci]+=1; //increment
+                for(auto ci= cands.begin(); ci !=cands.end(); ci.inc()){ //if we do not find any rrpv value equal to the maximum value
+                    if(array[*ci]< rpvMax){ //loop through the cache again
+                        array[*ci]+=1; //increement each block's rrpv until we finally find one equal to rpvMax
                     }
                     
                     
